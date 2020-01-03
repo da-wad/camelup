@@ -41,15 +41,17 @@ def advance_camels(game_board, n_rolls, verbose=False):
             return True, n_rolls, moving_camels[-1]
         game_board[square_id + roll[1] - 1] = game_board[square_id + roll[1] - 1] + moving_camels
     return False, n_rolls, None
-        
 
-if __name__ == "__main__":
+def play_game():
     game_board = initialize_game_board()
-    print(game_board)
     n_rolls = 0
     finished = False
     while not finished:
         finished, n_rolls, winner = advance_camels(game_board, n_rolls)
+    return winner, n_rolls, game_board
+
+if __name__ == "__main__":
+    winner, n_rolls, final_game_board = play_game()
     print(winner, "Wins")
     print("Game took {} rolls.".format(n_rolls))
-    print("Final positions: {}".format(game_board))
+    print("Final positions: {}".format(final_game_board))
