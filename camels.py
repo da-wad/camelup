@@ -26,24 +26,30 @@ def get_camel_position(game_board, colour):
             return i + 1
 
 
-def advance_camels(game_board):
+def advance_camels(game_board, n_rolls, verbose=False):
     dice_rolls = get_dice_with_numbers()
     for roll in dice_rolls:
-        print("Roll = ", roll)
+        n_rolls += 1
+        if verbose:
+            print(game_board)
+            print("Roll #{} = {}".format(n_rolls, roll))
         square_id = get_camel_position(game_board, roll[0])
         square = game_board[square_id - 1]
         moving_camels = square[square.index(roll[0]):]
         game_board[square_id - 1] = square[:len(square) - len(moving_camels)]
         if square_id + roll[1] - 1 > 15:
-            print(moving_camels[-1], "Wins")
-            print("Final positions:", game_board)
-            exit()
+            return True, n_rolls, moving_camels[-1]
         game_board[square_id + roll[1] - 1] = game_board[square_id + roll[1] - 1] + moving_camels
-        print(game_board)
+    return False, n_rolls, None
         
 
 if __name__ == "__main__":
     game_board = initialize_game_board()
     print(game_board)
-    while True:
-        advance_camels(game_board)
+    n_rolls = 0
+    finished = False
+    while not finished:
+        finished, n_rolls, winner = advance_camels(game_board, n_rolls)
+    print(winner, "Wins")
+    print("Game took {} rolls.".format(n_rolls))
+    print("Final positions: {}".format(game_board))
